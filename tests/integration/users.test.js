@@ -18,6 +18,8 @@ describe('GET /users/:id', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.nom).toBe('Alice');
+
+    
   });
 
   test('retourne 404 pour un utilisateur inconnu', async () => {
@@ -38,5 +40,10 @@ describe('GET /users/:id', () => {
     // la table doit toujours exister et contenir sa ligne
     const { rows } = await db.query('SELECT count(*) FROM users');
     expect(Number(rows[0].count)).toBe(1);
+  });
+
+    test('ne divulgue pas la technologie du serveur', async () => {
+    const res = await request(app).get('/users/1');
+    expect(res.headers['x-powered-by']).toBeUndefined();
   });
 });
